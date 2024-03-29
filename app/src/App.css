@@ -1,0 +1,12 @@
+.App {
+  text-align: center;
+}
+
+:focus {
+  box-shadow: none !important;
+}
+
+a {
+  color: var(--cutom-a);
+  color: rgb(58, 138, 58);
+}

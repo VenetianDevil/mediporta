@@ -1,0 +1,17 @@
+.page-link {
+  color: var(--cutom-a);
+}
+
+.page-link:hover {
+  color: var(--cutom-a-hover);
+}
+
+.page-link:focus {
+  color: var(--cutom-a-focus);
+}
+
+.active>.page-link, .page-link.active {
+  color: var(--bs-pagination-active-color);
+  background-color: var(--cutom-a);
+  border-color: var(--cutom-a);
+}
