@@ -1,355 +1,56 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Pagination, Spinner } from 'react-bootstrap';
 import { useSearchParams } from "react-router-dom";
-// import { format } from 'date-fns';
 import { Helmet } from 'react-helmet-async';
-import useTags, { TagsQueryOptions, Tag } from '../../utils/services/useTags.tsx';
-import { useQuery } from 'react-query';
+import useTags, { TagsQueryOptions, Tag, TOrder, TSort } from '../../utils/services/useTags.tsx';
+import { useQueries } from 'react-query';
 import ErrorHandler from '../../components/errorHandler.tsx';
 import DataTable from '../../components/table/dataTable.tsx';
 import DataPagination from '../../components/dataPagination.jsx';
 import InputGroupNumber from '../../components/table/formInput.tsx';
 import FormSelectSort from '../../components/table/formSelect.tsx';
 
+type TagArr = Tag[];
+
 function Tags() {
   const { getTags } = useTags();
   const [searchParams,] = useSearchParams();
-  const [tags, setTags] = useState([]);
-  const [requestTotal, setRequestTotal] = useState(true); // request total number of records only with firt query
+  const [tags, setTags] = useState<TagArr[]>([]);
 
   const keyNames = [{ key: "name", name: "Nazwa", sortable: true }, { key: "count", name: "l. postów" }];
-  const sortOptions = ["popular", "activity", "name"]
+  const sortOptions = ["popular", "activity", "name"];
 
   const [paginationInfo, setPaginationInfo] = useState({ activePage: Number(searchParams.get("page") || 1), count: 0, total: 0 });
-  const [tagsQueryOptions,] = useState(new TagsQueryOptions({
-    order: 'desc',
-    sort: 'popular',
+  const [tagsQueryOptions, setTagsQueryOptions] = useState<TagsQueryOptions>(new TagsQueryOptions({
+    order: searchParams.get("order") as TOrder,
+    sort: searchParams.get("sort") as TSort,
     page: paginationInfo.activePage,
-    pagesize: Number(searchParams.get("pagesize")) || undefined,
-
+    pagesize: Number(searchParams.get("pagesize")),
   }));
-  const { isLoading, isError, isSuccess, data, error, ...rest } = useQuery(['tags', tagsQueryOptions.page], () => getTags(tagsQueryOptions, requestTotal), { refetchOnWindowFocus: false });
-  // const isLoading = false;
-  // const isError = false;
-  // const isSuccess = true;
-  // const data = {
-  //   items: [
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 2529023,
-  //       "name": "javascript"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 2192458,
-  //       "name": "python"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 1917429,
-  //       "name": "java"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 1615050,
-  //       "name": "c#"
-  //     },
-  //     {
-  //       "collectives": [
-  //         {
-  //           "tags": [
-  //             "php"
-  //           ],
-  //           "external_links": [
-  //             {
-  //               "type": "support",
-  //               "link": "https://stackoverflow.com/contact?topic=15"
-  //             }
-  //           ],
-  //           "description": "A collective where developers working with PHP can learn and connect about the open source scripting language.",
-  //           "link": "/collectives/php",
-  //           "name": "PHP",
-  //           "slug": "php"
-  //         }
-  //       ],
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 1464508,
-  //       "name": "php"
-  //     },
-  //     {
-  //       "collectives": [
-  //         {
-  //           "tags": [
-  //             "android",
-  //             "ios"
-  //           ],
-  //           "external_links": [
-  //             {
-  //               "type": "support",
-  //               "link": "https://stackoverflow.com/contact?topic=15"
-  //             }
-  //           ],
-  //           "description": "A collective for developers who want to share their knowledge and learn more about mobile development practices and platforms",
-  //           "link": "/collectives/mobile-dev",
-  //           "name": "Mobile Development",
-  //           "slug": "mobile-dev"
-  //         }
-  //       ],
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 1417314,
-  //       "name": "android"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 1187442,
-  //       "name": "html"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 1034862,
-  //       "name": "jquery"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 806776,
-  //       "name": "c++"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 804286,
-  //       "name": "css"
-  //     },
-  //     {
-  //       "collectives": [
-  //         {
-  //           "tags": [
-  //             "android",
-  //             "ios"
-  //           ],
-  //           "external_links": [
-  //             {
-  //               "type": "support",
-  //               "link": "https://stackoverflow.com/contact?topic=15"
-  //             }
-  //           ],
-  //           "description": "A collective for developers who want to share their knowledge and learn more about mobile development practices and platforms",
-  //           "link": "/collectives/mobile-dev",
-  //           "name": "Mobile Development",
-  //           "slug": "mobile-dev"
-  //         }
-  //       ],
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 687280,
-  //       "name": "ios"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 670775,
-  //       "name": "sql"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 662058,
-  //       "name": "mysql"
-  //     },
-  //     {
-  //       "collectives": [
-  //         {
-  //           "tags": [
-  //             "shinydashboard",
-  //             "lubridate",
-  //             "tibble",
-  //             "zoo",
-  //             "forcats",
-  //             "stringr",
-  //             "r-package",
-  //             "rstudio",
-  //             "r-caret",
-  //             "rvest",
-  //             "data.table",
-  //             "dtplyr",
-  //             "shinyapps",
-  //             "tidyverse",
-  //             "readr",
-  //             "purrr",
-  //             "r-raster",
-  //             "dplyr",
-  //             "knitr",
-  //             "shiny-server",
-  //             "plyr",
-  //             "ggplot2",
-  //             "tidyr",
-  //             "rlang",
-  //             "r",
-  //             "shiny",
-  //             "quantmod"
-  //           ],
-  //           "external_links": [
-  //             {
-  //               "type": "support",
-  //               "link": "https://stackoverflow.com/contact?topic=15"
-  //             }
-  //           ],
-  //           "description": "A collective where data scientists and AI researchers gather to find, share, and learn about R and other subtags like knitr and dplyr.",
-  //           "link": "/collectives/r-language",
-  //           "name": "R Language",
-  //           "slug": "r-language"
-  //         }
-  //       ],
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 505609,
-  //       "name": "r"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 476817,
-  //       "name": "reactjs"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 472085,
-  //       "name": "node.js"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 416703,
-  //       "name": "arrays"
-  //     },
-  //     {
-  //       "has_synonyms": false,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 403931,
-  //       "name": "c"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 374635,
-  //       "name": "asp.net"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 360366,
-  //       "name": "json"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 343683,
-  //       "name": "python-3.x"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 338059,
-  //       "name": "ruby-on-rails"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 337895,
-  //       "name": ".net"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 334538,
-  //       "name": "sql-server"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 333386,
-  //       "name": "swift"
-  //     },
-  //     {
-  //       "has_synonyms": false,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 311839,
-  //       "name": "django"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 304107,
-  //       "name": "angular"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 292332,
-  //       "name": "objective-c"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 286655,
-  //       "name": "pandas"
-  //     },
-  //     {
-  //       "has_synonyms": true,
-  //       "is_moderator_only": false,
-  //       "is_required": false,
-  //       "count": 286528,
-  //       "name": "excel"
-  //     }
-  //   ],
-  //   has_more: true,
-  //   quota_max: 300,
-  //   quota_remaining: 118,
-  //   total: 1000,
-  // }
-  // console.log(isLoading, isError, isSuccess, data, error, rest)
+  const [resTotal, resTags] = useQueries([
+    {
+      queryKey: ['tagsTotal'],
+      queryFn: () => getTags(tagsQueryOptions.queryObject, true),
+      refetchOnWindowFocus: false, refetchIntervalInBackground: false, refetchOnMount: false,
+      retry: false,
+
+    },
+    {
+      queryKey: ['tags', tagsQueryOptions.page],
+      queryFn: () => getTags(tagsQueryOptions.queryObject),
+      refetchOnWindowFocus: false,
+      retry: false,
+
+    }
+
+  ]);
+
+  const [isLoading, isSuccess, isError, data, error] = [resTags.isLoading || resTotal.isLoading, resTags.isSuccess && resTotal.isSuccess, resTags.isError || resTotal.isError, resTags.data, resTags.error];
 
   const changePage = (idx: number) => {
+    console.log("change page")
     if (idx != paginationInfo.activePage) {
+      console.log("--change page set pagination info and update query")
       setPaginationInfo(prev => {
         return {
           ...prev,
@@ -357,30 +58,40 @@ function Tags() {
 
         }
       })
-      tagsQueryOptions.update({ page: idx })
+      // tagsQueryOptions.update({ page: idx })
+      setTagsQueryOptions(prev => {
+        return new TagsQueryOptions({
+          ...prev.queryObject,
+          page: idx
+        });
+      })
     }
   }
 
   const changePageSize = (size: number) => {
-    tagsQueryOptions.update({ pagesize: size });
+    // tagsQueryOptions.update({ pagesize: size });
+    setTagsQueryOptions(prev => {
+      return new TagsQueryOptions({
+        ...prev.queryObject,
+        pagesize: size
+      });
+    })
   };
 
-  const changeSortParams = (params: { sort: string, order: string }) => {
-    tagsQueryOptions.update(params);
+  const changeSortParams = (params: { sort: TSort, order: TOrder }) => {
+    // tagsQueryOptions.update(params);
+    setTagsQueryOptions(prev => {
+      return new TagsQueryOptions({
+        ...prev.queryObject,
+        ...params,
+      });
+    })
   }
 
-  const loader = <Spinner animation='border' role='status' className='border-4' />;
-  const pagination = <DataPagination config={{ ...paginationInfo, maxItems: 5 }} callback={changePage} />;
-
   useEffect(() => {
-    if (isSuccess) {
-      paginationInfo.total = data.total;
-      setRequestTotal(false);
-    }
-  }, [])
-
-  useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && !resTags.isFetching) {
+      console.log(resTotal.data.total)
+      if (paginationInfo.total === 0) paginationInfo.total = resTotal.data.total;
       const newCount = Math.ceil(paginationInfo.total / tagsQueryOptions.pagesize);
       setPaginationInfo(prev => {
         return {
@@ -389,11 +100,48 @@ function Tags() {
         }
       })
       setTags(data.items);
-
     }
+  }, [isSuccess, resTags.isFetching]) // data
 
-  }, [data]) // data
+  useEffect(() => {
+    console.log("QParam changed!")
+    let changedParams = {};
+    Object.keys(tagsQueryOptions).forEach(key => {
+      key = key.replace(/^_/, '');
+      const value = searchParams.get(key) || undefined;
+      // console.log(key, value, tagsQueryOptions[key])
+      if (value !== tagsQueryOptions[key]) {
+        changedParams[key] = value;
+        if (key === "page" && !!value) {
+          const newCount = Math.ceil(paginationInfo.total / tagsQueryOptions.pagesize);
+          setPaginationInfo(prev => {
+            return {
+              ...prev,
+              activePage: Number(value),
+              count: newCount,
+            }
+          })
+        }
+      }
+    })
+    console.log(changedParams)
+    if (Object.keys(changedParams).length > 0) {
+      // tagsQueryOptions.update(changedParams);
+      setTagsQueryOptions(prev => {
+        return new TagsQueryOptions({
+          ...prev.queryObject,
+          ...changedParams,
+        });
+      })
+      if (resTotal.isError) resTotal.refetch();
+    }
+  }, [searchParams]);
 
+  const loader = <Spinner animation='border' role='status' className='border-4' />;
+  const pagination = <DataPagination config={{ ...paginationInfo, maxItems: 5 }} callback={changePage} />;
+
+  // console.log(isLoading, isError, resTags.isError, resTotal.isError, isSuccess, data, error, resTags.isFetching, tags)
+  // console.log(tagsQueryOptions, paginationInfo);
   return (
     <Row className='my-5'>
       <Helmet>
@@ -403,20 +151,21 @@ function Tags() {
         <h1 className='mb-5'>Tagi&nbsp;{isLoading && tags.length > 0 ? <span className='position-absolute'>{loader}</span> : null}</h1>
         {isError ? <ErrorHandler error={error} /> :
           <div>
+            <Row className='mb-3'>
+              <Col xs={12} sm={{ span: 4, offset: 5 }} md={{ span: 3, offset: 6 }} lg={{ span: 2, offset: 8 }}>
+                <InputGroupNumber config={{ defaultValue: tagsQueryOptions.pagesize }} callback={changePageSize} text="/ str." searchParamName="pagesize" min={1} max={100} />
+              </Col>
+              <Col xs={12} sm={{ span: 3 }} lg={{ span: 2 }}>
+                <FormSelectSort options={sortOptions} selected={{ sort: tagsQueryOptions.sort, order: tagsQueryOptions.order }} callback={changeSortParams} />
+              </Col>
+            </Row>
             {pagination}
-            {!isLoading || tags.length > 0 ?
+            {!isLoading ?
               <div>
-                <Row className='mb-3'>
-                  <Col xs={12} sm={{ span: 4, offset: 5 }} md={{ span: 3, offset: 6 }} lg={{ span: 2, offset: 8 }}>
-                    <InputGroupNumber defaultValue={tagsQueryOptions.pagesize} callback={changePageSize} text="/ str." searchParamName="pagesize" min={1} max={100} />
-                  </Col>
-                  <Col xs={12} sm={{ span: 3 }} lg={{ span: 2 }}>
-                    <FormSelectSort options={sortOptions} selected={{ sort: tagsQueryOptions.sort, order: tagsQueryOptions.order }} callback={changeSortParams} />
-                  </Col>
-                </Row>
                 <DataTable data={tags} keyNames={keyNames} isIndex={true} page={tagsQueryOptions.page} pagesize={tagsQueryOptions.pagesize} />
               </div>
-              : loader
+              :
+              <DataTable data={[]} keyNames={keyNames} isIndex={true} />
             }
             {pagination}
           </div>

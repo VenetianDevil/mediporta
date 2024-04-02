@@ -1,4 +1,4 @@
-import React, { createRef, useState } from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 import { Row, Col, Container, Table } from 'react-bootstrap';
 import { NotificationManager } from 'react-notifications';
 import PropTypes from 'prop-types';
@@ -11,25 +11,41 @@ type KNObject = {
   sortable: boolean
 };
 
-const DataTable = ({ data, isIndex = true, keyNames, page = 1, pagesize = 0 }) => {
-  if (!data) { data = []; };
+const DataTable = ({ data, isIndex = true, keyNames, page = 1, pagesize = 0 }) => { //saver to pass keyNames for table head
 
-  if ((!keyNames || keyNames.length === 0)) {
-    keyNames = [];
-    if (!!data && data.length > 0) {
-      Object.keys(data[0]).forEach((data_key: string) => {
-        keyNames.push({
-          key: data_key,
-          name: data_key,
+  useEffect(() => {
+    // console.log(data)
+    if (!data) { data = []; };
+
+    if ((!keyNames || keyNames.length === 0)) {
+      keyNames = [];
+      if (!!data && data.length > 0) {
+        const templ_item = data[0];
+        Object.keys(templ_item).forEach((data_key: string) => {
+          const item_value_type = typeof templ_item[data_key];
+          if (["boolean", "number", "string"].includes(item_value_type)) { //don't show fileds with complex value type: object, array etc.
+            keyNames.push({
+              key: data_key,
+              name: data_key,
+            });
+          }
         })
-      })
+      }
     }
-  }
+
+  }, [])
+
+  useEffect(() => {
+    if (!!data && !!data[0]) {
+      console.log('data changed ', data[0].name)
+
+    }
+  }, data)
 
   const thead =
     <thead>
       <tr>
-        {isIndex ? <th style={{width: '100px'}}>#</th> : null}
+        {isIndex ? <th style={{ width: '100px' }}>#</th> : null}
         {keyNames.map((el: KNObject) => {
           // if (el.key in Object(data[0])) {
           //   console.log(el)
@@ -61,7 +77,7 @@ const DataTable = ({ data, isIndex = true, keyNames, page = 1, pagesize = 0 }) =
 
 
   return (
-    <Table striped bordered hover className='mt-3' style={{tableLayout: 'fixed'}}>
+    <Table striped bordered hover className='mt-3' style={{ tableLayout: 'fixed' }}>
       {thead}
       {tbody}
     </Table>
