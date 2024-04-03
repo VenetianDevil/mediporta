@@ -36,7 +36,7 @@ function Tags() {
 
     },
     {
-      queryKey: ['tags', tagsQueryOptions.page],
+      queryKey: ['tags', tagsQueryOptions],
       queryFn: () => getTags(tagsQueryOptions.queryObject),
       refetchOnWindowFocus: false,
       retry: false,

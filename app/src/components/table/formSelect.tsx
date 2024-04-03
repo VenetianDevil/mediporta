@@ -1,4 +1,4 @@
-import React, { DOMElement, createRef, useState } from 'react';
+import React, { useEffect, useRef} from 'react';
 import { Row, Col, Form } from 'react-bootstrap';
 import { NotificationManager } from 'react-notifications';
 import PropTypes from 'prop-types';
@@ -8,6 +8,7 @@ var _ = require('lodash');
 
 const FormSelectSort = ({ options, selected, callback }) => {
   const [_, setSearchParams] = useSearchParams();
+  const ref = useRef({ value: JSON.stringify(selected) })
 
   const onChange = e => {
     const value = JSON.parse(e.target.value);
@@ -19,8 +20,13 @@ const FormSelectSort = ({ options, selected, callback }) => {
     callback(value);
   }
 
+  useEffect(() => {
+    console.log('--!config chane', selected)
+    ref.current.value = JSON.stringify(selected) ;
+  }, [selected])
+
   return (
-    <Form.Select value={JSON.stringify(selected)} onChange={(e) => onChange(e)}>
+    <Form.Select ref={ref} defaultValue={JSON.stringify(selected)} onChange={(e) => onChange(e)}>
       {options.reduce((acc, option: string) => {
         acc.push(<option key={option + ' asc'} value={JSON.stringify({ sort: option, order: 'asc' })}>{option} &#8593;</option>)
         acc.push(<option key={option + ' desc'} value={JSON.stringify({ sort: option, order: 'desc' })}>{option} &#8595;</option>)
