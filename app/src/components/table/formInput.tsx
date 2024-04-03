@@ -10,7 +10,8 @@ const InputGroupNumber = ({ config, callback, searchParamName, text, min = 1, ma
   const [isInvalid, setIsInvalid] = useState(false);
   const ref = useRef({ value: config.defaultValue });
 
-  const validateField = (val: number) => {
+  const validateField = () => {
+    const val = ref.current.value;
     const isValid = val >= min && ((!!max && val <= max) || !max);
     setIsInvalid(!isValid);
     return isValid;
@@ -18,8 +19,8 @@ const InputGroupNumber = ({ config, callback, searchParamName, text, min = 1, ma
 
   const onChange = async (e) => {
     const value = e.target.value;
-    console.log("validating", min, max, value, validateField(value))
-    if (validateField(value)) {
+    // console.log("validating", min, max, value, validateField())
+    if (validateField()) {
       if (searchParamName)
         setSearchParams(prev => { prev.set(searchParamName, value); return prev; });
       callback(Number(value));
@@ -30,7 +31,8 @@ const InputGroupNumber = ({ config, callback, searchParamName, text, min = 1, ma
   useEffect(() => {
     console.log('--!config chane', config)
     ref.current.value = config.defaultValue;
-  }, [config.defaultValue])
+    validateField();
+  }, [config.defaultValue, min, max])
 
   return (
     <InputGroup>
@@ -44,7 +46,7 @@ InputGroupNumber.propTypes = {
   config: PropTypes.shape({
     defaultValue: PropTypes.number.isRequired,
 
-  }),
+  }).isRequired,
   callback: PropTypes.func,
   searchParamName: PropTypes.string,
   text: PropTypes.string,

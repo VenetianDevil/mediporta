@@ -8,7 +8,7 @@ import ErrorHandler from '../../components/errorHandler.tsx';
 import DataTable from '../../components/table/dataTable.tsx';
 import DataPagination from '../../components/dataPagination.jsx';
 import InputGroupNumber from '../../components/table/formInput.tsx';
-import FormSelectSort from '../../components/table/formSelect.tsx';
+import FormSelectSort from '../../components/table/formSelectSort.tsx';
 
 type TagArr = Tag[];
 
@@ -20,7 +20,7 @@ function Tags() {
   const keyNames = [{ key: "name", name: "Nazwa", sortable: true }, { key: "count", name: "l. postów" }];
   const sortOptions = ["popular", "activity", "name"];
 
-  const [paginationInfo, setPaginationInfo] = useState({ activePage: Number(searchParams.get("page") || 1), count: 0, total: 0 });
+  const [paginationInfo, setPaginationInfo] = useState({ activePage: Number(searchParams.get("page") || 1), pagesize: 30, total: 0 });
   const [tagsQueryOptions, setTagsQueryOptions] = useState<TagsQueryOptions>(new TagsQueryOptions({
     order: searchParams.get("order") as TOrder,
     sort: searchParams.get("sort") as TSort,
@@ -92,11 +92,10 @@ function Tags() {
     if (isSuccess && !resTags.isFetching) {
       console.log(resTotal.data.total)
       if (paginationInfo.total === 0) paginationInfo.total = resTotal.data.total;
-      const newCount = Math.ceil(paginationInfo.total / tagsQueryOptions.pagesize);
       setPaginationInfo(prev => {
         return {
           ...prev,
-          count: newCount,
+          pagesize: tagsQueryOptions.pagesize,
         }
       })
       setTags(data.items);
@@ -113,12 +112,11 @@ function Tags() {
       if (value !== tagsQueryOptions[key]) {
         changedParams[key] = value;
         if (key === "page" && !!value) {
-          const newCount = Math.ceil(paginationInfo.total / tagsQueryOptions.pagesize);
           setPaginationInfo(prev => {
             return {
               ...prev,
               activePage: Number(value),
-              count: newCount,
+              pagesize: tagsQueryOptions.pagesize,
             }
           })
         }

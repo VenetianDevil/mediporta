@@ -3,6 +3,30 @@ import DataTable from '../components/table/dataTable.tsx';
 
 const exampleData = [
   {
+    "collectives": [
+      {
+        "tags": [
+          "php"
+        ],
+        "external_links": [
+          {
+            "type": "support",
+            "link": "https://stackoverflow.com/contact?topic=15"
+          }
+        ],
+        "description": "A collective where developers working with PHP can learn and connect about the open source scripting language.",
+        "link": "/collectives/php",
+        "name": "PHP",
+        "slug": "php"
+      }
+    ],
+    "has_synonyms": true,
+    "is_moderator_only": false,
+    "is_required": false,
+    "count": 1464508,
+    "name": "php"
+  },
+  {
     "has_synonyms": true,
     "is_moderator_only": false,
     "is_required": false,
@@ -29,30 +53,6 @@ const exampleData = [
     "is_required": false,
     "count": 1615050,
     "name": "c#"
-  },
-  {
-    "collectives": [
-      {
-        "tags": [
-          "php"
-        ],
-        "external_links": [
-          {
-            "type": "support",
-            "link": "https://stackoverflow.com/contact?topic=15"
-          }
-        ],
-        "description": "A collective where developers working with PHP can learn and connect about the open source scripting language.",
-        "link": "/collectives/php",
-        "name": "PHP",
-        "slug": "php"
-      }
-    ],
-    "has_synonyms": true,
-    "is_moderator_only": false,
-    "is_required": false,
-    "count": 1464508,
-    "name": "php"
   },
   {
     "collectives": [

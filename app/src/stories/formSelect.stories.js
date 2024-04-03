@@ -1,5 +1,5 @@
 import { fn } from '@storybook/test';
-import FormSelectSort from '../components/table/formSelect.tsx';
+import FormSelectSort from '../components/table/formSelectSort.tsx';
 import { withRouter } from 'storybook-addon-remix-react-router';
 
 const sortOptions = ["popular", "activity", "name"];
@@ -18,9 +18,14 @@ export default {
   },
   tags: ['autodocs'],
   args: {
-    selected
+    selected,
   },
-  argTypes: { callback: { action: "Value Changed" } }
+  argTypes: {
+    callback: { action: "Value Changed", description: "Function called after select; new selected object passed as an argument" },
+    emptyValueLabel: {
+      description: "Label for option with empty value (disabled)"
+    }
+  }
 };
 
 const Template = (args) => <FormSelectSort {...args} />
@@ -31,30 +36,22 @@ Default.args = {
 
 };
 
-// export const WithKeyNames = Template.bind({})
-// WithKeyNames.args = {
-//   data: exampleData,
-//   keyNames,
+export const NoDefaultValue = Template.bind({})
+NoDefaultValue.args = {
+  options: sortOptions,
+  selected: undefined,
 
-// };
+};
 
-// export const NoIndexCol = Template.bind({})
-// NoIndexCol.args = {
-//   data: exampleData,
-//   keyNames,
-//   isIndex: false,
+export const NoDefaultValueCustomLabel = Template.bind({})
+NoDefaultValueCustomLabel.args = {
+  options: sortOptions,
+  selected: undefined,
+  emptyValueLabel: "Wybierz kolejność"
 
-// };
+};
 
-// export const EmptyData = Template.bind({})
-// EmptyData.args = {
-//   data: [],
-
-// };
-
-// export const EmptyDataWithKeys = Template.bind({})
-// EmptyDataWithKeys.args = {
-//   data: [],
-//   keyNames,
-
-// };
+export const Empty = Template.bind({})
+Empty.args = {
+  options: []
+};
