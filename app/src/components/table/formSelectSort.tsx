@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Row, Col, Form } from 'react-bootstrap';
-import { NotificationManager } from 'react-notifications';
+import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { useSearchParams } from 'react-router-dom';
 
@@ -21,7 +20,7 @@ const FormSelectSort = ({ options, selected, callback, emptyValueLabel = "Sortuj
   }
 
   useEffect(() => {
-    ref.current.value = JSON.stringify(selected);
+    if (!!ref.current) { ref.current.value = JSON.stringify(selected); }
   }, [selected])
 
   if (!options || options.length == 0) return;

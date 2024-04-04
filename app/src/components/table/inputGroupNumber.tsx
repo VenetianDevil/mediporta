@@ -28,7 +28,7 @@ const InputGroupNumber = ({ config, callback, searchParamName, textStart, textEn
   const debouceOnChange = _.debounce(onChange, 300);
 
   useEffect(() => {
-    ref.current.value = config.defaultValue;
+    if (!!ref.current) { ref.current.value = config.defaultValue; }
     validateField();
   }, [config.defaultValue, min, max])
 

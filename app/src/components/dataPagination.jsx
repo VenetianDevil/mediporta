@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Row, Col, Pagination, InputGroup, Form } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Row, Col, Pagination } from 'react-bootstrap';
 import { useSearchParams } from "react-router-dom";
 import '../styles/dataPagination.css';
 import PropTypes from 'prop-types';
