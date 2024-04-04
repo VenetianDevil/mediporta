@@ -1,10 +1,10 @@
 import { fn } from '@storybook/test';
-import InputGroupNumber from '../components/table/formInput.tsx';
+import InputGroupNumber from '../components/table/inputGroupNumber.tsx';
 import { withRouter } from 'storybook-addon-remix-react-router';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {
-  title: 'Example/Input',
+  title: 'Components/Input',
   component: InputGroupNumber,
   decorators: [withRouter],
   parameters: {
@@ -17,8 +17,9 @@ export default {
     },
     min: 1,
     max: 100,
-    text: "/ str.",
     searchParamName: "pagesize",
+    textStart: "",
+    textEnd: ""
 
   },
   argTypes: {
@@ -39,11 +40,26 @@ Default.args = {
   }
 };
 
+export const TextAddons = Template.bind({})
+TextAddons.args = {
+  config: {
+    defaultValue: 1,
+  },
+  textStart: "Strona",
+  textEnd: "z 30",
+};
+
 export const Error = Template.bind({})
 Error.args = {
   config: {
     defaultValue: 107
   }
 };
-
+Error.parameters = {
+  docs: {
+    description: {
+      story: "input value > max allowed"
+    }
+  }
+}
 

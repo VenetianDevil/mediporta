@@ -3,7 +3,7 @@ import ErrorHandler from '../components/errorHandler.tsx';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 export default {
-  title: 'Example/Error',
+  title: 'Components/Error',
   component: ErrorHandler,
   parameters: {
     layout: 'padded',

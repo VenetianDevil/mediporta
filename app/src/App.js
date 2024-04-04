@@ -27,9 +27,8 @@ function App() {
             <main>
               <Container>
                 <Routes>
-                  <Route path='/' element={<Navigate to="/tagi" />} />
+                  <Route path='*' element={<Navigate to="/tagi" />} />
                   <Route path="/tagi" element={<Tags />} />
-                  {/* <Route path="*" element={<PageNotFound />} /> */}
                 </Routes>
               </Container>
             </main>

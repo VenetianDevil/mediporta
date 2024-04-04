@@ -6,7 +6,7 @@ import '../styles/dataPagination.css';
 const paginationInfo = { activePage: 1, pagesize: 30, total: 500, maxItems: 5 }
 
 export default {
-  title: 'Example/Pagination',
+  title: 'Components/Pagination',
   component: DataPagination,
   decorators: [withRouter],
   parameters: {
@@ -44,4 +44,11 @@ PageCountLessThanMaxAllowed.args = {
 export const TotalLessThanPageSize = Template.bind({})
 TotalLessThanPageSize.args = {
   config: { ...paginationInfo, total: 10 }
+}
+TotalLessThanPageSize.parameters = {
+  docs: {
+    description: {
+      story: "Pagination will not render if there is only one page."
+    }
+  }
 }

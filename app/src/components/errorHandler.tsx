@@ -2,8 +2,6 @@ import React, { createRef, useEffect, useState } from 'react';
 import { Row, Col, Container } from 'react-bootstrap';
 import { NotificationManager } from 'react-notifications';
 
-var _ = require('lodash');
-
 const ErrorHandler = ({ error }) => {
   const [message, setMessage] = useState("");
 

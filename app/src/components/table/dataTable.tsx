@@ -8,7 +8,7 @@ type KNObject = {
 
 };
 
-const DataTable = ({ data, isIndex = true, keyNames, page = 1, pagesize = 0 }) => { //saver to pass keyNames for table head
+const DataTable = ({ data, isIndex = true, keyNames, page = 1, pagesize = 0, emptyDataInfo = "Brak danych" }) => { //saver to pass keyNames for table head
   const [isLoading, setIsLoading] = useState(true);
   const [_keyNames, setKeyNames] = useState<KNObject[]>(keyNames || []);
 
@@ -18,12 +18,10 @@ const DataTable = ({ data, isIndex = true, keyNames, page = 1, pagesize = 0 }) =
     if (!keyNames || keyNames.length === 0) {
       keyNames = [];
       if (!!data && data.length > 0) {
-        console.log("setting keys", data[0])
         const templ_item = data[0];
         Object.keys(templ_item).forEach((data_key: string) => {
           const item_value_type = typeof templ_item[data_key];
           if (["boolean", "number", "string"].includes(item_value_type)) { //don't show fileds with complex value type: object, array etc.
-            console.log('pushing key', data_key)
             keyNames.push({
               key: data_key,
               name: data_key,
@@ -43,10 +41,7 @@ const DataTable = ({ data, isIndex = true, keyNames, page = 1, pagesize = 0 }) =
       <tr>
         {isIndex ? <th style={{ width: '100px' }}>#</th> : null}
         {_keyNames.map((el: KNObject) => {
-          // if (el.key in Object(data[0])) {
-          //   console.log(el)
           return <th scope='col' key={el.name}>{el.name}</th>
-          // }
         })}
       </tr>
     </thead>
@@ -57,19 +52,22 @@ const DataTable = ({ data, isIndex = true, keyNames, page = 1, pagesize = 0 }) =
         {isIndex ? <td>{idx + 1 + ((page - 1) * pagesize)}</td> : null}
         {_keyNames.map((el: KNObject) => {
           if (el.key in Object(data_el)) {
-            const value = data_el[el.key];
+            let value = data_el[el.key];
             if (typeof value === "boolean") {
               return value ? <td key={el.key} style={{ "color": 'green' }}>&#10003;</td> : <td key={el.key} style={{ "color": 'red' }}>&#10007;</td>
             }
-            if (typeof value === undefined) {
-              return <td key={el.key}>b.d.</td>
+            if (typeof value === "undefined" || value === null) {
+              value = "b.d.";
+            } else if (!["number", "string"].includes(typeof value)) {
+              value = typeof value;
             }
             return <td key={el.key}>{value}</td>
-          }
+          } else { return < td key={el.key} > b.d.</td> }
         })}
-      </tr>)}
-      {data.length === 0 ? <tr><td colSpan={_keyNames.length + (isIndex ? 1 : 0)}>Brak danych</td></tr> : null}
-    </tbody>
+      </tr>)
+      }
+      {data.length === 0 ? <tr><td colSpan={_keyNames.length + (isIndex ? 1 : 0)}>{emptyDataInfo}</td></tr> : null}
+    </tbody >
 
   if (isLoading) return;
 
@@ -91,6 +89,7 @@ DataTable.propTypes = {
   })),
   page: PropTypes.number,
   pagesize: PropTypes.number,
+  emptyDataInfo: PropTypes.string,
 
 }
 

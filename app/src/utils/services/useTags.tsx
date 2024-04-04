@@ -41,7 +41,7 @@ interface ITagsQueryOptions extends Object {
 export class TagsQueryOptions implements ITagsQueryOptions {
   private _order: TOrder;
   private _sort: TSort;
-  private _site: 'stackoverflow' = 'stackoverflow'; //not changable
+  private _site: 'stackoverflow' = 'stackoverflow'; //not changeable
   private _page: number;
   private _pagesize: number;
   fromdate?: number;
@@ -69,7 +69,7 @@ export class TagsQueryOptions implements ITagsQueryOptions {
   get queryObject(): ITagsQueryOptions {
     return Object.keys(this)
       .filter(key => !!this[key] || this[key] === 0)
-      .reduce((acc, key) => { acc[key.replace(/^_/, "")] = this[key]; return acc }, {});
+      .reduce((acc, key) => { acc[key.replace(/^_/, "")] = this[key]; return acc }, {}) as ITagsQueryOptions;
   }
 
   set order(newOrderValue: string) {

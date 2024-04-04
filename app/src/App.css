@@ -10,3 +10,8 @@ a {
   color: var(--cutom-a);
   color: rgb(58, 138, 58);
 }
+
+table td {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

@@ -8,7 +8,7 @@ var _ = require('lodash');
 
 const FormSelectSort = ({ options, selected, callback, emptyValueLabel = "Sortuj" }) => {
   const [_, setSearchParams] = useSearchParams();
-  const ref = useRef({ value: JSON.stringify(selected) })
+  const ref = useRef<HTMLSelectElement>() as any;
 
   const onChange = e => {
     const value = JSON.parse(e.target.value);
@@ -21,7 +21,6 @@ const FormSelectSort = ({ options, selected, callback, emptyValueLabel = "Sortuj
   }
 
   useEffect(() => {
-    console.log('--!config chane', selected)
     ref.current.value = JSON.stringify(selected);
   }, [selected])
 
